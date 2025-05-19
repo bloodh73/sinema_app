@@ -9,6 +9,7 @@ import 'package:sinema_app/model/crousle_model.dart';
 import 'package:sinema_app/model/movie_model.dart';
 import 'package:sinema_app/model/star_model.dart';
 import 'package:sinema_app/screens/detail_screen.dart';
+import 'package:sinema_app/screens/image_full.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -58,6 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
               saleSakht: data[i]['saleSakht'],
               price: data[i]['price'],
               image_url: data[i]['image_url'],
+              keshvar: data[i]['image_url'],
               zaman: data[i]['zaman'],
             ),
           );
@@ -112,7 +114,7 @@ class _HomeScreenState extends State<HomeScreen> {
             MovieList(width: width, movieList: movieList1),
 
             textBar('بازیگران', 'بیشتر >'),
-            Container(
+            SizedBox(
               height: 160,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
@@ -202,7 +204,7 @@ class MovieList extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: width.width,
-      height: 250,
+      height: 300,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: movieList.length,
@@ -211,9 +213,11 @@ class MovieList extends StatelessWidget {
             width: 175,
             child: GestureDetector(
               onTap: () {
-                Navigator.of(
-                  context,
-                ).push(MaterialPageRoute(builder: (context) => DetailScreen()));
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => ImageFull(id: movieList[index].id),
+                  ),
+                );
               },
               child: Card(
                 shape: RoundedRectangleBorder(
@@ -231,12 +235,18 @@ class MovieList extends StatelessWidget {
                       // SizedBox(height: 20),
                       ClipRRect(
                         borderRadius: BorderRadius.circular(15),
-                        child: FadeInImage(
-                          placeholder: AssetImage('assets/images/logo.png'),
-                          image: NetworkImage(movieList[index].image_url),
-                          width: 150,
-                          height: 180,
-                          fit: BoxFit.cover,
+                        child: Hero(
+                          tag: 'imageHero${movieList[index].id}',
+                          child: Material(
+                            color: Colors.transparent,
+                            child: FadeInImage(
+                              placeholder: AssetImage('assets/images/logo.png'),
+                              image: NetworkImage(movieList[index].image_url),
+                              width: 150,
+                              height: 180,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
                         ),
                       ),
                       SizedBox(height: 10),
@@ -258,6 +268,32 @@ class MovieList extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                           fontSize: 12,
                           fontFamily: 'YekanBakh',
+                        ),
+                      ),
+                      SizedBox(height: 5),
+                      SizedBox(
+                        width: width.width,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.green,
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder:
+                                    (context) =>
+                                        DetailScreen(id: movieList[index].id),
+                              ),
+                            );
+                          },
+                          child: Text(
+                            'بیشتر',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'YekanBakh',
+                              fontSize: 18,
+                            ),
+                          ),
                         ),
                       ),
                     ],
